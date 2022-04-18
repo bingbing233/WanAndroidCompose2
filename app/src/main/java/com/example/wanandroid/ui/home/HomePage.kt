@@ -1,6 +1,5 @@
 package com.example.wanandroid.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +18,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wanandroid.MainViewModel
 import com.example.wanandroid.MainViewModel.Companion.icons
 import com.example.wanandroid.MainViewModel.Companion.labels
-import com.example.wanandroid.R
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import kotlinx.coroutines.launch
@@ -27,13 +25,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomePage() {
     val viewModel: MainViewModel = viewModel()
-    val page = viewModel.curPage.collectAsState()
+    val page = viewModel.curListPage.collectAsState()
     val scope = rememberCoroutineScope()
     Scaffold(topBar = { HomeTopBar(tittle = labels[page.value]) {} },
         bottomBar = {
             HomeBottomBar(selectItem = page.value) {
                 scope.launch {
-                    viewModel.curPage.emit(it)
+                    viewModel.curListPage.emit(it)
                 }
             }
         }) {
@@ -74,7 +72,6 @@ fun HomeBottomBar(selectItem: Int = 0, onBottomItemClick: (Int) -> Unit = {}) {
                             painter = painterResource(id = icons[it]),
                             contentDescription = labels[it]
                         )
-
                 })
         }
     }

@@ -10,35 +10,38 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wanandroid.ui.WebPage
 import com.example.wanandroid.ui.home.HomePage
 import com.example.wanandroid.ui.theme.WanAndroidTheme
 
 class MainActivity : ComponentActivity() {
 
-    val viewModel:MainViewModel by viewModels()
+    val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             WanAndroidTheme {
+                val page = viewModel.curPage.collectAsState()
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val showWhichPage = viewModel.showWhichPage.collectAsState()
-                    when(showWhichPage.value){
-                        is ShowWhichPage.ShowHome -> {
-                            HomePage()
-                        }
-                        else -> {
-
-                        }
+                    HomePage()
+                    AnimatedVisibility(visible = page.value is Page.Web) {
+                        WebPage()
                     }
                 }
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if(viewModel.curPage.value !is Page.Home){
+            viewModel.setPage(Page.Home)
+        }else{
+            super.onBackPressed()
         }
     }
 }

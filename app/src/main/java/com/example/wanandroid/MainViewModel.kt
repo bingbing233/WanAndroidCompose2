@@ -20,22 +20,62 @@ class MainViewModel:ViewModel() {
             R.drawable.ic_baseline_list_alt_24,
             R.drawable.ic_baseline_folder_24
         )
-
         val labels = arrayListOf("主页", "广场", "公众号", "体系", "项目")
     }
 
-    //当前页面
-    val curPage = MutableStateFlow(0)
+    /**
+     * HomePage当前的list页面
+     */
+    val curListPage = MutableStateFlow(0)
+    fun setCurListPage(page:Int){
+        viewModelScope.launch {
+            curListPage.emit(page)
+        }
+    }
 
-    val showWhichPage = MutableStateFlow(ShowWhichPage.ShowHome)
+    val isRefreshing = MutableStateFlow(false)
+    fun setRefreshing(b :Boolean){
+        viewModelScope.launch {
+            isRefreshing.emit(b)
+        }
+    }
+    val homeListState = MutableStateFlow<HomeListSate>(HomeListSate.Null)
+    fun setHomeListState(state:HomeListSate){
+        viewModelScope.launch {
+            homeListState.emit(state)
+        }
+    }
+
+    /**
+     * 设置当前页面 Home Web ...
+     */
+    val curPage = MutableStateFlow<Page>(Page.Home)
+    fun setPage(page: Page){
+        viewModelScope.launch {
+            curPage.emit(page)
+        }
+    }
+
+    var selectArticle:Article? = null
 
     fun getHomeArticle(): Flow<PagingData<Article>> {
        return WanRepository.getHomeArticle().cachedIn(viewModelScope)
     }
+
+    fun refreshHomeArticle(){
+        WanRepository.getHomeArticle()
+    }
 }
 
-sealed class ShowWhichPage{
-    object ShowHome : ShowWhichPage()
-    object ShowWeb : ShowWhichPage()
-    object ShowOther : ShowWhichPage()
+sealed class Page{
+    object Home : Page()
+    object Web : Page()
+    object Other : Page()
+}
+
+//HomeList的状态
+sealed class HomeListSate(){
+    object Null:HomeListSate()
+    object Loading:HomeListSate()
+    object Error:HomeListSate()
 }
