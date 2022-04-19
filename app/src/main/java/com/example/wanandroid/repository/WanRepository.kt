@@ -11,7 +11,7 @@ object WanRepository {
     private val api = WanApi.create()
 
     fun getHomeArticle(): Flow<PagingData<Article>> {
-        return Pager(config = PagingConfig(15),) {
+        return Pager(config = PagingConfig(10),) {
             ArticlePagingResource { api.getArticle(it) }
         }.flow
     }

@@ -15,6 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.wanandroid.MainViewModel
 import com.example.wanandroid.MainViewModel.Companion.icons
 import com.example.wanandroid.MainViewModel.Companion.labels
@@ -27,24 +30,40 @@ fun HomePage() {
     val viewModel: MainViewModel = viewModel()
     val page = viewModel.curListPage.collectAsState()
     val scope = rememberCoroutineScope()
+    val navController = rememberNavController()
+    val router = arrayListOf("home","square","wx","system","project")
     Scaffold(topBar = { HomeTopBar(tittle = labels[page.value]) {} },
         bottomBar = {
             HomeBottomBar(selectItem = page.value) {
                 scope.launch {
                     viewModel.curListPage.emit(it)
                 }
+                navController.navigate(router[it])
             }
         }) {
         val topPadding = it.calculateTopPadding()
         Column() {
-            Spacer(modifier = Modifier.height(topPadding).background(color = Color.Transparent))
-            when(page.value){
-                0 -> {
-                    HomeList()
-                }
-            }
-        }
+            Spacer(modifier = Modifier
+                .height(topPadding)
+                .background(color = Color.Transparent))
+                NavHost(navController = navController, startDestination = "home"){
+                    composable("home"){
+                        HomeList()
+                    }
+                    composable("square"){
 
+                    }
+                    composable("wx"){
+
+                    }
+                    composable("system"){
+
+                    }
+                    composable("project"){
+
+                    }
+                }
+        }
     }
 }
 
