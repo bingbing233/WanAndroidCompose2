@@ -7,7 +7,7 @@ import com.example.wanandroid.model.Article
 import com.example.wanandroid.model.HomeResult
 
 class ArticlePagingResource(private val getHomeResult:suspend (Int)->HomeResult) : PagingSource<Int, Article>() {
-    override fun getRefreshKey(state: PagingState<Int, Article>): Int = 1
+    override fun getRefreshKey(state: PagingState<Int, Article>): Int? = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
 

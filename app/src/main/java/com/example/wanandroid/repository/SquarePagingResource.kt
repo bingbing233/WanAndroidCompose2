@@ -9,7 +9,7 @@ import com.example.wanandroid.model.HomeResult
 
 class SquarePagingResource(private val getHomeResult: suspend (Int)->HomeResult) : PagingSource<Int,Article>() {
     override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
-        return 0
+        return null
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
