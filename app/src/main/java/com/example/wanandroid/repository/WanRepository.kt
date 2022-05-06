@@ -15,4 +15,10 @@ object WanRepository {
             ArticlePagingResource { api.getArticle(it) }
         }.flow
     }
+
+    fun getSquareArticle():Flow<PagingData<Article>>{
+        return Pager(config = PagingConfig(10)){
+            SquarePagingResource{ api.getSquareArticle(it) }
+        }.flow
+    }
 }

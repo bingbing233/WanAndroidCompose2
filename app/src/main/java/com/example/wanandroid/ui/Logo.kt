@@ -17,12 +17,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wanandroid.R
+import com.example.wanandroid.ui.theme.Purple500
+import com.example.wanandroid.ui.theme.Purple700
 
 @Preview
 @Composable
 fun Logo() {
     Card(shape = RoundedCornerShape(8.dp)) {
-        Box(Modifier.background(color = Color.Magenta).padding(15.dp), contentAlignment = Alignment.Center) {
+        Box(Modifier.background(color = Purple500).padding(15.dp), contentAlignment = Alignment.Center) {
             Icon( painter = painterResource(id = R.drawable.ic_baseline_menu_book_24),"", tint = Color.White)
         }
     }

@@ -20,4 +20,8 @@ interface WanApi {
 
     @GET("article/list/{page}/json")
     suspend fun getArticle(@Path("page") page:Int?=0):HomeResult
+
+    @GET("user_article/list/{page}/json")
+    suspend fun getSquareArticle(@Path("page") page: Int?=0):HomeResult
+
 }

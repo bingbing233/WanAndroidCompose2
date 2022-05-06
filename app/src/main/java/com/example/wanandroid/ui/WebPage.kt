@@ -1,6 +1,8 @@
 package com.example.wanandroid.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -34,7 +36,7 @@ fun WebPage() {
     val article = viewModel.selectArticle
     val scope = rememberCoroutineScope()
     var progress by remember {
-        mutableStateOf(0)
+        mutableStateOf(0f)
     }
     Scaffold(topBar = {
         WebTopBar(title = article?.title ?: "", onClick = {
@@ -46,8 +48,8 @@ fun WebPage() {
         val topPadding = it.calculateTopPadding()
         Column {
             Spacer(modifier = Modifier.height(topPadding))
-            AnimatedVisibility(visible = progress < 90) {
-                LinearProgressIndicator(progress = progress.toFloat(), color = ProcessBarColor)
+            AnimatedVisibility(visible = progress<100) {
+                LinearProgressIndicator(progress = progress/100, color = ProcessBarColor, modifier = Modifier.fillMaxWidth())
             }
             WebView(url = article?.link ?: "", onProcess = { p->
                 progress = p
@@ -62,21 +64,19 @@ fun WebTopBar(title: String = "title", onClick: () -> Unit = {}) {
     TopAppBar(title = {
         Column {
             Row(
-                Modifier
-                    .fillMaxWidth()
-                    .clickable { onClick() },
+                Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
-    })
+    },Modifier.clickable {onClick()  })
 }
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebView(url: String, onProcess: (Int) -> Unit = {}) {
+fun WebView(url: String, onProcess: (Float) -> Unit = {}) {
     AndroidView(factory = {
         val webView = WebView(it)
         webView.apply {
@@ -96,10 +96,17 @@ fun WebView(url: String, onProcess: (Int) -> Unit = {}) {
                         super.shouldOverrideUrlLoading(view, request)
                 }
             }
+
+            Log.e("TAG", "WebView: $progress", )
         }
         webView.loadUrl(url)
         webView
     }, modifier = Modifier, update = {
-        onProcess(it.progress)
+       it.webChromeClient = object :WebChromeClient(){
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                onProcess(newProgress.toFloat())
+                super.onProgressChanged(view, newProgress)
+            }
+        }
     })
 }

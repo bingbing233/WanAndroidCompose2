@@ -1,15 +1,14 @@
 package com.example.wanandroid.ui.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -21,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.wanandroid.MainViewModel
 import com.example.wanandroid.MainViewModel.Companion.icons
 import com.example.wanandroid.MainViewModel.Companion.labels
+import com.example.wanandroid.Page
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import kotlinx.coroutines.launch
@@ -38,32 +38,53 @@ fun HomePage() {
                 scope.launch {
                     viewModel.curListPage.emit(it)
                 }
-                navController.navigate(router[it])
+//                navController.navigate(router[it])
             }
         }) {
         val topPadding = it.calculateTopPadding()
-        Column() {
-            Spacer(modifier = Modifier
-                .height(topPadding)
-                .background(color = Color.Transparent))
-                NavHost(navController = navController, startDestination = "home"){
-                    composable("home"){
+        Column (
+            Modifier
+                .fillMaxSize()
+                .padding(top = topPadding)
+                .background(Color.Transparent)){
+                when(page.value){
+                    0 -> {
                         HomeList()
                     }
-                    composable("square"){
-
+                    1 -> {
+                        SquareList()
                     }
-                    composable("wx"){
-
-                    }
-                    composable("system"){
-
-                    }
-                    composable("project"){
+                    else -> {
 
                     }
                 }
+//                NavHost(navController = navController, startDestination = "home"){
+//                    composable("home"){
+//                        HomeList()
+//                    }
+//                    composable("square"){
+//                        TempPage(title = "square")
+//                    }
+//                    composable("wx"){
+//                        TempPage(title = "wx")
+//
+//                    }
+//                    composable("system"){
+//                        TempPage(title = "system")
+//
+//                    }
+//                    composable("project"){
+//                        TempPage(title = "project")
+//                    }
+//                }
         }
+    }
+}
+
+@Composable
+fun TempPage(title:String) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+        Text(text = title)
     }
 }
 

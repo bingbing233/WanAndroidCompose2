@@ -8,6 +8,7 @@ import com.example.wanandroid.model.Article
 import com.example.wanandroid.repository.WanRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel:ViewModel() {
@@ -33,12 +34,6 @@ class MainViewModel:ViewModel() {
         }
     }
 
-    val isRefreshing = MutableStateFlow(false)
-    fun setRefreshing(b :Boolean){
-        viewModelScope.launch {
-            isRefreshing.emit(b)
-        }
-    }
     val homeListState = MutableStateFlow<HomeListSate>(HomeListSate.Null)
     fun setHomeListState(state:HomeListSate){
         viewModelScope.launch {
@@ -58,13 +53,15 @@ class MainViewModel:ViewModel() {
 
     var selectArticle:Article? = null
 
+    //主页数据
     fun getHomeArticle(): Flow<PagingData<Article>> {
        return WanRepository.getHomeArticle().cachedIn(viewModelScope)
     }
-
-    fun refreshHomeArticle(){
-        WanRepository.getHomeArticle()
+    //广场数据
+    fun getSquareArticle():Flow<PagingData<Article>>{
+        return WanRepository.getSquareArticle().cachedIn(viewModelScope)
     }
+
 }
 
 sealed class Page{
