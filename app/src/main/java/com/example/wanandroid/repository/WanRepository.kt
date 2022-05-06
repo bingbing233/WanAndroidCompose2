@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.wanandroid.model.Article
+import com.example.wanandroid.model.WxOfficialResult
 import kotlinx.coroutines.flow.Flow
 
 object WanRepository {
@@ -12,13 +13,23 @@ object WanRepository {
 
     fun getHomeArticle(): Flow<PagingData<Article>> {
         return Pager(config = PagingConfig(10),) {
-            ArticlePagingResource { api.getArticle(it) }
+            ArticlePagingResource(api::getArticle)
         }.flow
     }
 
     fun getSquareArticle():Flow<PagingData<Article>>{
         return Pager(config = PagingConfig(10)){
-            SquarePagingResource{ api.getSquareArticle(it) }
+            SquarePagingResource(api::getSquareArticle)
+        }.flow
+    }
+
+    suspend fun getWxOfficial(): WxOfficialResult {
+        return api.getWxOfficial()
+    }
+
+    fun getWxArticle(id:Int):Flow<PagingData<Article>>{
+        return Pager(config = PagingConfig(10)){
+            WxArticlePagingResource(id,api::getWxArticle)
         }.flow
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.wanandroid.model.Article
+import com.example.wanandroid.model.WxOfficial
 import com.example.wanandroid.repository.WanRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,30 +29,26 @@ class MainViewModel:ViewModel() {
      * HomePage当前的list页面
      */
     val curListPage = MutableStateFlow(0)
+    val curPage = MutableStateFlow<Page>(Page.Home)
+    var selectArticle:Article? = null //当前选中的文章，用于WebView展示
+    val officialList = MutableStateFlow<List<WxOfficial>>(ArrayList())
+
     fun setCurListPage(page:Int){
         viewModelScope.launch {
             curListPage.emit(page)
         }
     }
 
-    val homeListState = MutableStateFlow<HomeListSate>(HomeListSate.Null)
-    fun setHomeListState(state:HomeListSate){
-        viewModelScope.launch {
-            homeListState.emit(state)
-        }
-    }
 
     /**
-     * 设置当前页面 Home Web ...
+     * 设置当前页面 Home/Web ...
      */
-    val curPage = MutableStateFlow<Page>(Page.Home)
     fun setPage(page: Page){
         viewModelScope.launch {
             curPage.emit(page)
         }
     }
 
-    var selectArticle:Article? = null
 
     //主页数据
     fun getHomeArticle(): Flow<PagingData<Article>> {
@@ -61,7 +58,16 @@ class MainViewModel:ViewModel() {
     fun getSquareArticle():Flow<PagingData<Article>>{
         return WanRepository.getSquareArticle().cachedIn(viewModelScope)
     }
-
+    //公众号
+    fun getWxOfficial(){
+        viewModelScope.launch {
+           officialList.emit(WanRepository.getWxOfficial().wxOfficials)
+        }
+    }
+    //公众号文章
+    fun getWxArticle(id:Int): Flow<PagingData<Article>> {
+        return WanRepository.getWxArticle(id).cachedIn(viewModelScope)
+    }
 }
 
 sealed class Page{

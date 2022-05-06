@@ -21,6 +21,7 @@ import com.example.wanandroid.MainViewModel
 import com.example.wanandroid.MainViewModel.Companion.icons
 import com.example.wanandroid.MainViewModel.Companion.labels
 import com.example.wanandroid.Page
+import com.example.wanandroid.ui.home.wx.WxList
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.insets.ui.TopAppBar
 import kotlinx.coroutines.launch
@@ -32,6 +33,7 @@ fun HomePage() {
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val router = arrayListOf("home","square","wx","system","project")
+
     Scaffold(topBar = { HomeTopBar(tittle = labels[page.value]) {} },
         bottomBar = {
             HomeBottomBar(selectItem = page.value) {
@@ -54,29 +56,13 @@ fun HomePage() {
                     1 -> {
                         SquareList()
                     }
+                    2 -> {
+                        WxList()
+                    }
                     else -> {
 
                     }
                 }
-//                NavHost(navController = navController, startDestination = "home"){
-//                    composable("home"){
-//                        HomeList()
-//                    }
-//                    composable("square"){
-//                        TempPage(title = "square")
-//                    }
-//                    composable("wx"){
-//                        TempPage(title = "wx")
-//
-//                    }
-//                    composable("system"){
-//                        TempPage(title = "system")
-//
-//                    }
-//                    composable("project"){
-//                        TempPage(title = "project")
-//                    }
-//                }
         }
     }
 }
