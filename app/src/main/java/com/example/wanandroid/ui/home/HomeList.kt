@@ -78,7 +78,7 @@ fun HomeListItem(article: Article, onClick: (Article) -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Row() {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(text = article.author, color = NameColor, fontSize = 16.sp)
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(text = article.chapterName, color = NameColor, fontSize = 14.sp)
